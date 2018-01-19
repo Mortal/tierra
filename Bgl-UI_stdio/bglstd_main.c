@@ -146,7 +146,7 @@ void	BglUI_Printf(sc, sx, sy, sa, se, str)
 }
 
 char*	BglUI_StrInput(msg)
-     char* msg;
+     I8s* msg;
 {
   static char	getStrBuf[100];
   tfprintf( stdout, msg );
@@ -155,7 +155,7 @@ char*	BglUI_StrInput(msg)
 }
 
 char*	BglUI_SecretStrInput(msg)
-     char* msg;
+     I8s* msg;
 {
   static char	getStrBuf[100];
   tfprintf( stdout, msg );

@@ -964,27 +964,26 @@ I32s BglSuAuthentCheck()
   I32s i;
 #endif
 
-  if ((fd_passwd = tfopen((I8s *)"etc/passwd", (I8s *)"r")) == NULL){
-    tsprintf((char *)(&(bglStrBuf[0])),
-        "Error open etc/passwd in BglSuAuthentCheck()\n");
-    FEPrintf(BGL_MES_X, BGL_MES_Y, 0, -1, (char *)(&(bglStrBuf[0])));
-  }
-  else{
-    while (tfgets(BufFile, 42, fd_passwd) != NULL){
-      BufFile[strlen((const char *)(&(BufFile[0])))-1]='\0';
-      tsprintf((char *)(&(BufName[0])),
-          (char *)"%s", strtok((char *)(
-          &(BufFile[0])), (const char *)":"));
-      tsprintf((char *)(&(BufPasswd[0])), "%s", strtok(NULL, ":"));
+  if ((fd_passwd = tfopen("etc/passwd", "r")) == NULL) {
+
+    tsprintf(bglStrBuf, "Error open etc/passwd in BglSuAuthentCheck()\n");
+    FEPrintf(BGL_MES_X, BGL_MES_Y, 0, -1, bglStrBuf);
+
+  } else {
+
+    while (tfgets(BufFile, 42, fd_passwd) != NULL) {
+
+      BufFile[strlen(BufFile)-1] = '\0';
+      tsprintf(BufName, "%s", strtok(BufFile, ":"));
+      tsprintf(BufPasswd, "%s", strtok(NULL, ":"));
 #ifdef unix
       salt[0]=BufPasswd[0];
       salt[1]=BufPasswd[1];
       salt[2]='\0';
-      strcpy((char *)(&((BglSockBuf[0].user.passwd)[0])),
-          (const char *)crypt((char *)(&((BglSockBuf[0].
-          user.passwd)[0])), (const char *)(&(salt[0]))));
+
+      strcpy(BglSockBuf[0].user.passwd, crypt(BglSockBuf[0].user.passwd, salt));
 #else
-      for(i=0;i<((int)(strlen((const char *)
+      for(i=0;i<((int)(strlen(
           (&((BglSockBuf[0].user.passwd)[0])))));i++)
           (BglSockBuf[0].user.passwd)[i]=
           (I8s)(((I32s)((BglSockBuf[0].user.passwd)[i]))+
@@ -992,14 +991,14 @@ I32s BglSuAuthentCheck()
       (BglSockBuf[0].user.passwd)[i]='\0';
 
 #endif
-      if((!strncmp((const char *)(&(BufName[0])),
-          (const char *)(&(BglSockBuf[0].user.name[0])),
-          strlen((const char *)(&(BufName[0])))))&&
-	    (!strncmp((const char *)(&(BufPasswd[0])),
-            (const char *)(&(BglSockBuf[0].user.passwd[0])),
-            strlen((const char *)(&(BufPasswd[0])))))){
-	tsprintf((char *)(&(bglStrBuf[0])), "BglSuAuthentCheck is OK.\n");
-	FEPrintf(BGL_MES_X, BGL_MES_Y, 0, -1, (char *)(&(bglStrBuf[0])));
+      if((!strncmp((BufName),
+          (&(BglSockBuf[0].user.name[0])),
+          strlen((BufName))))&&
+	    (!strncmp((BufPasswd),
+            (&(BglSockBuf[0].user.passwd[0])),
+            strlen((BufPasswd))))){
+	tsprintf((bglStrBuf), "BglSuAuthentCheck is OK.\n");
+	FEPrintf(BGL_MES_X, BGL_MES_Y, 0, -1, (bglStrBuf));
 	tfclose(fd_passwd);
 	return 1;
       }

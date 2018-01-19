@@ -169,8 +169,9 @@ void	UpdatePlanData()
       XtSetValues(planInstExe_mDataLabel, args, 1);
     }
 
-    tsprintf(bglStrBuf, "Generation %8.0f   %s",
-	     data->Generations,  ctime((time_t*)&(data->tp)));
+		//char *time = ctime((time_t *) &(data->tp));
+    tsprintf(bglStrBuf, "Generation %8.0f",
+	     data->Generations);
     XtSetArg(args[0], XtNlabel, bglStrBuf);
     XtSetValues(planGenerationsDataLabel, args, 1);
 
